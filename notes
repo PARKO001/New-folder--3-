@@ -2,4 +2,5 @@ python -m venv venv               :-> Virtual environment setup
 
 uvicorn app.main:app --reload    :-> Testing via Swagger UI
 pytest --cov=app tests/           :-> Coverage using pytest
+pytest --cov=app --cov-report=term-missing tests/
 

@@ -40,21 +40,30 @@ class TestUPICRUD:
             response = await ac.delete("/upi/1")
         assert response.status_code in (200, 400)
 
-    async def test_invalid_input_create(self):
-        async with await self.get_test_client() as ac:
-            response = await ac.post("/upi/", json=self.invalid_data)
-        assert response.status_code == 422
+    async def test_create_upi_sql_failure(self, monkeypatch):
+        def mock_cursor_execute_fail(*args, **kwargs):
+            raise Exception("Simulated SQL Error")
 
-    async def test_create_upi_exception(self, monkeypatch):
-        def mock_create_upi(name, upi_id):
-            raise Exception("DB insert error")
+        class MockCursor:
+            def execute(self, *args, **kwargs): raise Exception("Simulated SQL Error")
+            def close(self): pass
+            def __enter__(self): return self
+            def __exit__(self, exc_type, exc_val, exc_tb): pass
 
-        monkeypatch.setattr("app.crud.create_upi", mock_create_upi)
+
+        class MockConn:
+            def cursor(self): return MockCursor()
+            def commit(self): pass
+            def close(self): pass
+
+        monkeypatch.setattr("app.crud.get_connection", lambda: MockConn())
 
         async with await self.get_test_client() as ac:
             response = await ac.post("/upi/", json=self.valid_data)
+
         assert response.status_code == 400
-        assert response.json()["detail"] == "DB insert error"
+        assert "Simulated SQL Error" in response.json()["detail"]
+
 
     async def test_update_upi_exception(self, monkeypatch):
         def mock_update_upi(id, name, upi_id):
@@ -77,3 +86,36 @@ class TestUPICRUD:
             response = await ac.delete("/upi/99999")
         assert response.status_code == 400
         assert response.json()["detail"] == "DB delete error"
+
+    async def test_create_upi_validation_failure(self):
+        async with await self.get_test_client() as ac:
+            response = await ac.post("/upi/", json=self.invalid_data)
+        assert response.status_code == 422 
+
+    async def test_update_nonexistent_id(self):
+        async with await self.get_test_client() as ac:
+            response = await ac.put("/upi/999999", json=self.updated_data)
+        assert response.status_code in (200, 400) 
+
+    async def test_delete_nonexistent_id(self):
+        async with await self.get_test_client() as ac:
+            response = await ac.delete("/upi/999999")
+        assert response.status_code in (200, 400)
+
+    async def test_read_upi_empty(self, monkeypatch):
+        monkeypatch.setattr("app.crud.get_all_upi", lambda: [])
+        async with await self.get_test_client() as ac:
+            response = await ac.get("/upi/")
+        assert response.status_code == 200
+        assert response.json() == []
+
+    async def test_create_duplicate_upi(self):
+        async with await self.get_test_client() as ac:
+            await ac.post("/upi/", json=self.valid_data)
+            response = await ac.post("/upi/", json=self.valid_data)
+        assert response.status_code in (400, 409)
+
+    async def test_update_upi_validation_failure(self):
+        async with await self.get_test_client() as ac:
+            response = await ac.put("/upi/1", json=self.invalid_data)
+        assert response.status_code == 422
