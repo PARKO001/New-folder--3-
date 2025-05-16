@@ -1,7 +1,9 @@
-import pytest
-from httpx import AsyncClient, ASGITransport
-from app.main import app
 import uuid
+
+import pytest
+from httpx import ASGITransport, AsyncClient
+
+from app.main import app
 
 pytestmark = pytest.mark.asyncio
 
@@ -10,7 +12,10 @@ class TestUPICRUD:
     # Generate unique UPI ID per test class
     unique_upi_id = f"testuser_{uuid.uuid4().hex[:6]}@upi"
     valid_data = {"name": "Test User", "upi_id": unique_upi_id}
-    updated_data = {"name": "Updated User", "upi_id": f"updated_{uuid.uuid4().hex[:6]}@upi"}
+    updated_data = {
+        "name": "Updated User",
+        "upi_id": f"updated_{uuid.uuid4().hex[:6]}@upi",
+    }
     invalid_data = {"name": "", "upi_id": ""}
 
     @staticmethod
@@ -45,16 +50,27 @@ class TestUPICRUD:
             raise Exception("Simulated SQL Error")
 
         class MockCursor:
-            def execute(self, *args, **kwargs): raise Exception("Simulated SQL Error")
-            def close(self): pass
-            def __enter__(self): return self
-            def __exit__(self, exc_type, exc_val, exc_tb): pass
+            def execute(self, *args, **kwargs):
+                raise Exception("Simulated SQL Error")
 
+            def close(self):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
 
         class MockConn:
-            def cursor(self): return MockCursor()
-            def commit(self): pass
-            def close(self): pass
+            def cursor(self):
+                return MockCursor()
+
+            def commit(self):
+                pass
+
+            def close(self):
+                pass
 
         monkeypatch.setattr("app.crud.get_connection", lambda: MockConn())
 
@@ -63,7 +79,6 @@ class TestUPICRUD:
 
         assert response.status_code == 400
         assert "Simulated SQL Error" in response.json()["detail"]
-
 
     async def test_update_upi_exception(self, monkeypatch):
         def mock_update_upi(id, name, upi_id):
@@ -90,12 +105,12 @@ class TestUPICRUD:
     async def test_create_upi_validation_failure(self):
         async with await self.get_test_client() as ac:
             response = await ac.post("/upi/", json=self.invalid_data)
-        assert response.status_code == 422 
+        assert response.status_code == 422
 
     async def test_update_nonexistent_id(self):
         async with await self.get_test_client() as ac:
             response = await ac.put("/upi/999999", json=self.updated_data)
-        assert response.status_code in (200, 400) 
+        assert response.status_code in (200, 400)
 
     async def test_delete_nonexistent_id(self):
         async with await self.get_test_client() as ac:

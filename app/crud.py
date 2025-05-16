@@ -1,5 +1,4 @@
 from .database import get_connection
-import pymysql
 
 
 def create_upi(name: str, upi_id: str):
@@ -25,6 +24,7 @@ def get_all_upi():
     finally:
         conn.close()
 
+
 def update_upi(id: int, name: str, upi_id: str):
     conn = get_connection()
     try:
@@ -34,6 +34,7 @@ def update_upi(id: int, name: str, upi_id: str):
         conn.commit()
     finally:
         conn.close()
+
 
 def delete_upi(id: int):
     conn = get_connection()

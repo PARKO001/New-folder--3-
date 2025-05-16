@@ -1,13 +1,17 @@
 from fastapi import FastAPI, HTTPException
-from app import crud
 from pydantic import BaseModel, Field
-from app.models import UPIBase, UPIUpdate, UPIResponse
+
+from app import crud
+
+# from app.models import UPIBase, UPIResponse, UPIUpdate
 
 app = FastAPI()
+
 
 class UPI(BaseModel):
     name: str = Field(..., min_length=1)
     upi_id: str = Field(..., min_length=5)
+
 
 @app.post("/upi/")
 def create_user(upi: UPI):
@@ -31,6 +35,7 @@ def update_user(id: int, upi: UPI):
         return {"message": "UPI updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @app.delete("/upi/{id}")
 def delete_user(id: int):

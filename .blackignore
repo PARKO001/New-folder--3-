@@ -1,0 +1,11 @@
+
+
+venv/
+
+__pycache__/
+**/__pycache__/
+
+.coverage
+upi_dummy_data.csv
+
+insert_dummy_data.py

@@ -1,8 +1,10 @@
-import pymysql
 import os
+
+import pymysql
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 def get_connection():
     return pymysql.connect(
@@ -10,5 +12,5 @@ def get_connection():
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor,
     )
