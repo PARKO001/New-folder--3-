@@ -3,8 +3,6 @@ from pydantic import BaseModel, Field
 
 from app import crud
 
-# from app.models import UPIBase, UPIResponse, UPIUpdate
-
 app = FastAPI()
 
 

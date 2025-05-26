@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 24.3.0  # Use latest stable
+    rev: 24.3.0 
     hooks:
       - id: black
         language_version: python3
@@ -11,6 +11,6 @@ repos:
       - id: flake8
 
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1  # Example: try a slightly older version
+    rev: v5.10.1 
     hooks:
       - id: isort

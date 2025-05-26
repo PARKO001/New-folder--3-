@@ -4,3 +4,7 @@ uvicorn app.main:app --reload    :-> Testing via Swagger UI
 pytest --cov=app tests/           :-> Coverage using pytest
 pytest --cov=app --cov-report=term-missing tests/
 
+
+
+pre-commit install            :-> Pre-commit setup
+pre-commit run --all-files :-> Run pre-commit hooks on all files
