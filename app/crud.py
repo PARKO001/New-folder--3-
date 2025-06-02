@@ -1,7 +1,11 @@
+from typing import Dict, List  # Added for type hinting
+
+from loguru import logger  # Added loguru import
+
 from .database import get_connection
 
 
-def create_upi(name: str, upi_id: str):
+def create_upi(name: str, upi_id: str) -> None:  # Added type hint
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -9,13 +13,15 @@ def create_upi(name: str, upi_id: str):
             cursor.execute(sql, (name, upi_id))
         conn.commit()
     except Exception as e:
-        print(f"[CRUD ERROR] Failed to create UPI: {e}")
+        logger.error(
+            f"[CRUD ERROR] Failed to create UPI: {e}"
+        )  # Replaced print with logger
         raise
     finally:
         conn.close()
 
 
-def get_all_upi():
+def get_all_upi() -> List[Dict]:  # Added type hint
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -25,7 +31,7 @@ def get_all_upi():
         conn.close()
 
 
-def update_upi(id: int, name: str, upi_id: str):
+def update_upi(id: int, name: str, upi_id: str) -> None:  # Added type hint
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -36,7 +42,7 @@ def update_upi(id: int, name: str, upi_id: str):
         conn.close()
 
 
-def delete_upi(id: int):
+def delete_upi(id: int) -> None:  # Added type hint
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
