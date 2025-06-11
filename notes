@@ -8,4 +8,10 @@ pytest --cov=app --cov-report=term-missing tests/
 
 pre-commit install            :-> Pre-commit setup
 pre-commit run --all-files :-> Run pre-commit hooks on all files
+
+mypy app/
+bandit -r app/
 safety scan -r requirements.txt
+
+ruff check (liner)
+ruff format (formatter)

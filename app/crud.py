@@ -1,11 +1,11 @@
-from typing import Dict, List  # Added for type hinting
+from typing import Dict, List  # for type hinting
 
-from loguru import logger  # Added loguru import
+from loguru import logger
 
 from .database import get_connection
 
 
-def create_upi(name: str, upi_id: str) -> None:  # Added type hint
+def create_upi(name: str, upi_id: str) -> None:
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -13,15 +13,13 @@ def create_upi(name: str, upi_id: str) -> None:  # Added type hint
             cursor.execute(sql, (name, upi_id))
         conn.commit()
     except Exception as e:
-        logger.error(
-            f"[CRUD ERROR] Failed to create UPI: {e}"
-        )  # Replaced print with logger
+        logger.error(f"[CRUD ERROR] Failed to create UPI: {e}")
         raise
     finally:
         conn.close()
 
 
-def get_all_upi() -> List[Dict]:  # Added type hint
+def get_all_upi() -> List[Dict]:
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -31,7 +29,7 @@ def get_all_upi() -> List[Dict]:  # Added type hint
         conn.close()
 
 
-def update_upi(id: int, name: str, upi_id: str) -> None:  # Added type hint
+def update_upi(id: int, name: str, upi_id: str) -> None:
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -42,7 +40,7 @@ def update_upi(id: int, name: str, upi_id: str) -> None:  # Added type hint
         conn.close()
 
 
-def delete_upi(id: int) -> None:  # Added type hint
+def delete_upi(id: int) -> None:
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
