@@ -134,3 +134,10 @@ class TestUPICRUD:
         async with await self.get_test_client() as ac:
             response = await ac.put("/upi/1", json=self.invalid_data)
         assert response.status_code == 422
+
+
+# random text for testing purpose
+# This is a placeholder for any additional text or comments.
+# You can replace this with any other text or leave it empty.
+# This is a placeholder for any additional text or comments.
+# You can replace this with any other text or leave it empty.
