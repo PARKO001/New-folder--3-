@@ -13,5 +13,5 @@ mypy app/
 bandit -r app/
 safety scan -r requirements.txt
 
-ruff check (liner)
+ruff check (linter)
 ruff format (formatter)

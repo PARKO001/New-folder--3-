@@ -37,6 +37,7 @@ def update_user(id: int, upi: UPI) -> dict:
         raise HTTPException(status_code=400, detail=str(e))
 
 
+# fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 @app.delete("/upi/{id}")
 def delete_user(id: int) -> dict:
     try:
